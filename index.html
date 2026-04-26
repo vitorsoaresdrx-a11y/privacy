@@ -1030,16 +1030,37 @@
                 }
             }
 
-            const qrcode = pixData?.qrcode || pixData?.qr_code || pixData?.data?.qrcode || pixData?.data?.qr_code;
-            const pixcode = pixData?.pix_code || pixData?.pixCode || pixData?.copyPaste || pixData?.data?.pix_code;
+            let qrcode = null;
+            let pixcode = null;
+
+            function extractPix(obj) {
+                if (!obj || typeof obj !== 'object') return;
+                for (const key in obj) {
+                    const val = obj[key];
+                    if (typeof val === 'string') {
+                        if (val.startsWith('000201')) {
+                            pixcode = val;
+                        } else if (val.startsWith('data:image/') || (val.length > 100 && key.toLowerCase().includes('qr'))) {
+                            qrcode = val;
+                        }
+                    } else if (typeof val === 'object') {
+                        extractPix(val);
+                    }
+                }
+            }
+            extractPix(pixData);
+
+            if (qrcode && !qrcode.startsWith('data:image/')) {
+                qrcode = 'data:image/png;base64,' + qrcode;
+            }
 
             if (!qrcode || !pixcode) {
                  modalContent.innerHTML = `
                     <div style="text-align: center; padding: 40px 20px;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ff5e5e;"></i>
-                        <h3 style="margin-top: 20px;">Erro ao gerar PIX</h3>
-                        <p style="color: #666; font-size: 12px; margin-bottom: 5px;">O retorno da API não possui o QR Code.</p>
-                        <p style="color: #666; font-size: 12px; word-break: break-all; background: #eee; padding: 5px;">${JSON.stringify(pixData)}</p>
+                        <h3 style="margin-top: 20px;">Erro ao ler PIX</h3>
+                        <p style="color: #666; font-size: 12px; margin-bottom: 5px;">Não encontramos o código no retorno.</p>
+                        <p style="color: #666; font-size: 10px; word-break: break-all; background: #eee; padding: 5px; max-height: 100px; overflow: auto;">${JSON.stringify(pixData)}</p>
                         <button onclick="closeModal()" style="margin-top: 20px; padding: 10px 20px; border-radius: 20px; background: #eee; border: none; font-weight: bold; cursor: pointer;">Fechar</button>
                     </div>
                 `;
