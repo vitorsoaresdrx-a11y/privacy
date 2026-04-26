@@ -1050,8 +1050,12 @@
             }
             extractPix(pixData);
 
-            if (qrcode && !qrcode.startsWith('data:image/')) {
+            if (qrcode && !qrcode.startsWith('data:image/') && !qrcode.startsWith('http')) {
                 qrcode = 'data:image/png;base64,' + qrcode;
+            }
+
+            if (!qrcode && pixcode) {
+                qrcode = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(pixcode);
             }
 
             if (!qrcode || !pixcode) {
