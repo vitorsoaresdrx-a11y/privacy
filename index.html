@@ -1077,7 +1077,7 @@
                     <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Escaneie o QR Code abaixo ou copie o código PIX Copia e Cola.</p>
                     
                     <div style="background: white; padding: 15px; border-radius: 15px; border: 1px solid #eee; display: inline-block; margin-bottom: 20px;">
-                        <img src="${qrcode.startsWith('data:') ? qrcode : 'data:image/png;base64,'+qrcode}" style="width: 200px; height: 200px;" />
+                        <img src="${qrcode.startsWith('http') || qrcode.startsWith('data:') ? qrcode : 'data:image/png;base64,'+qrcode}" style="width: 200px; height: 200px;" />
                     </div>
                     
                     <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: left; position: relative;">
