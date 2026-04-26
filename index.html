@@ -969,6 +969,7 @@
 
         try {
             let pixData = null;
+            let backendErrorText = "";
             try {
                 const res = await fetch('/api/create-payment', {
                     method: 'POST',
@@ -978,34 +979,52 @@
                 if (res.ok) {
                     pixData = await res.json();
                 } else {
-                    throw new Error("Backend indisponivel");
+                    backendErrorText = await res.text();
+                    throw new Error("Status " + res.status);
                 }
             } catch (e) {
-                console.log("Fallback para OmegaPay API direta");
-                const res = await fetch('https://app.omegapayments.com.br/api/v1/gateway/pix/receive', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-public-key': 'yagododigital_mc6hvcok12a4jk9k',
-                        'x-secret-key': 'kxng049rc38fgnya0h6zvqiopwknrssdh3jsups2jlepztwj7g58azowdd2cnm08'
-                    },
-                    body: JSON.stringify({
-                        amount: amount,
-                        identifier: "BRUMACCIO_" + Date.now()
-                    })
-                });
-                pixData = await res.json();
+                console.log("Falha no backend (/api/create-payment):", e.message, backendErrorText);
+                console.log("Tentando fallback via CORS Proxy...");
+                
+                try {
+                    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://app.omegapayments.com.br/api/v1/gateway/pix/receive'), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-public-key': 'yagododigital_mc6hvcok12a4jk9k',
+                            'x-secret-key': 'kxng049rc38fgnya0h6zvqiopwknrssdh3jsups2jlepztwj7g58azowdd2cnm08'
+                        },
+                        body: JSON.stringify({
+                            amount: amount,
+                            identifier: "BRUMACCIO_" + Date.now()
+                        })
+                    });
+                    pixData = await res.json();
+                } catch(fallbackError) {
+                     modalContent.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ff5e5e;"></i>
+                            <h3 style="margin-top: 20px;">Erro Crítico</h3>
+                            <p style="color: #666; font-size: 12px; margin-bottom: 5px;">Backend falhou com: ${e.message} ${backendErrorText}</p>
+                            <p style="color: #666; font-size: 12px; word-break: break-all;">Fallback falhou com: ${fallbackError.message}</p>
+                            <button onclick="closeModal()" style="margin-top: 20px; padding: 10px 20px; border-radius: 20px; background: #eee; border: none; font-weight: bold; cursor: pointer;">Fechar</button>
+                        </div>
+                    `;
+                    return;
+                }
             }
 
-            const qrcode = pixData.qrcode || pixData.qr_code || pixData?.data?.qrcode || pixData?.data?.qr_code;
-            const pixcode = pixData.pix_code || pixData.pixCode || pixData.copyPaste || pixData?.data?.pix_code;
+            const qrcode = pixData?.qrcode || pixData?.qr_code || pixData?.data?.qrcode || pixData?.data?.qr_code;
+            const pixcode = pixData?.pix_code || pixData?.pixCode || pixData?.copyPaste || pixData?.data?.pix_code;
 
             if (!qrcode || !pixcode) {
                  modalContent.innerHTML = `
                     <div style="text-align: center; padding: 40px 20px;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ff5e5e;"></i>
                         <h3 style="margin-top: 20px;">Erro ao gerar PIX</h3>
-                        <p style="color: #666; font-size: 12px; word-break: break-all;">${JSON.stringify(pixData)}</p>
+                        <p style="color: #666; font-size: 12px; margin-bottom: 5px;">O retorno da API não possui o QR Code.</p>
+                        <p style="color: #666; font-size: 12px; word-break: break-all; background: #eee; padding: 5px;">${JSON.stringify(pixData)}</p>
+                        <button onclick="closeModal()" style="margin-top: 20px; padding: 10px 20px; border-radius: 20px; background: #eee; border: none; font-weight: bold; cursor: pointer;">Fechar</button>
                     </div>
                 `;
                 return;
