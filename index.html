@@ -538,7 +538,7 @@
                             <!-- Assinaturas -->
                             <div style="margin-top: 25px;">
                                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #111;">Assinaturas</h3>
-                                <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
+                                <div class="post-clickable" style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
                                     <span>1 mês</span>
                                     <span>R$ 79,99</span>
                                 </div>
@@ -551,11 +551,11 @@
                                     <i class="fas fa-chevron-up" style="color: #888; font-size: 14px;"></i>
                                 </div>
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                                    <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
+                                    <div class="post-clickable" style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
                                         <span>3 meses (1% off )</span>
                                         <span>R$ 237,57</span>
                                     </div>
-                                    <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
+                                    <div class="post-clickable" style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 600;">
                                         <span>6 meses (10% off )</span>
                                         <span>R$ 431,95</span>
                                     </div>
@@ -575,7 +575,7 @@
                     </div>
 
                     <!-- Post Preview -->
-                    <div style="background: white; border-radius: 15px; margin: 0 15px 20px 15px; overflow: hidden; border: 1px solid #eee;">
+                    <div class="post-clickable" style="background: white; border-radius: 15px; margin: 0 15px 20px 15px; overflow: hidden; border: 1px solid #eee;">
                         <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <img src="images/logo_1.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
@@ -769,5 +769,79 @@
 
     
 
+
+<!-- Subscription Modal -->
+<div id="subscription-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center; padding: 20px;">
+    <div style="background: white; width: 100%; max-width: 400px; border-radius: 20px; overflow: hidden; position: relative; animation: slideUp 0.3s ease-out;">
+        <button onclick="closeModal()" style="position: absolute; top: 15px; right: 15px; background: #eee; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; color: #555;">&times;</button>
+        
+        <div style="padding: 30px 20px;">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <img src="images/logo_1.png" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #ff8e5e; margin-bottom: 10px; object-fit: cover;">
+                <h3 style="font-size: 20px; font-weight: 800; margin: 0;">Assine para ver</h3>
+                <p style="font-size: 14px; color: #666; margin-top: 5px;">Escolha um plano para acessar o conteúdo de @blackLo</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 700; transition: transform 0.1s;" onclick="alert('Redirecionando para pagamento...')">
+                    <span>1 mês</span>
+                    <span>R$ 79,99</span>
+                </div>
+                <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 700; transition: transform 0.1s;" onclick="alert('Redirecionando para pagamento...')">
+                    <span>3 meses (1% off )</span>
+                    <span>R$ 237,57</span>
+                </div>
+                <div style="background: linear-gradient(90deg, #ffb38e, #ff8e5e); border-radius: 30px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #111; font-weight: 700; transition: transform 0.1s;" onclick="alert('Redirecionando para pagamento...')">
+                    <span>6 meses (10% off )</span>
+                    <span>R$ 431,95</span>
+                </div>
+            </div>
+            
+            <p style="text-align: center; font-size: 12px; color: #999; margin-top: 20px; line-height: 1.4;">
+                Ao assinar, você concorda com os Termos de Uso e a Política de Privacidade.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .post-clickable:hover {
+        cursor: pointer;
+        opacity: 0.95;
+    }
+</style>
+
+<script>
+    function openModal() {
+        document.getElementById('subscription-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scroll
+    }
+
+    function closeModal() {
+        document.getElementById('subscription-modal').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scroll
+    }
+
+    // Close modal on click outside
+    window.onclick = function(event) {
+        let modal = document.getElementById('subscription-modal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+
+<script>
+    // Link the post to the modal
+    $(document).ready(function() {
+        $('.post-clickable').on('click', function() {
+            openModal();
+        });
+    });
+</script>
 
 </body></html>
