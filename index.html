@@ -865,31 +865,29 @@
 
     function switchTab(tab) {
         if (tab === 'postagens') {
-            $('#tab-postagens').addClass('active');
-            $('#tab-midias').removeClass('active');
-            $('#content-postagens').show();
-            $('#content-midias').hide();
+            document.getElementById('tab-postagens').classList.add('active');
+            document.getElementById('tab-midias').classList.remove('active');
+            document.getElementById('content-postagens').style.display = 'block';
+            document.getElementById('content-midias').style.display = 'none';
         } else {
-            $('#tab-midias').addClass('active');
-            $('#tab-postagens').removeClass('active');
-            $('#content-midias').show();
-            $('#content-postagens').hide();
+            document.getElementById('tab-midias').classList.add('active');
+            document.getElementById('tab-postagens').classList.remove('active');
+            document.getElementById('content-midias').style.display = 'block';
+            document.getElementById('content-postagens').style.display = 'none';
         }
     }
 
     function switchFilter(element) {
         // Remove active styles from all
-        $('.filter-btn').css({
-            'background': 'transparent',
-            'color': '#202a3a',
-            'font-weight': '400'
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.style.background = 'transparent';
+            btn.style.color = '#202a3a';
+            btn.style.fontWeight = '400';
         });
         // Add active styles to clicked
-        $(element).css({
-            'background': '#fcece3',
-            'color': '#f58852',
-            'font-weight': '500'
-        });
+        element.style.background = '#fcece3';
+        element.style.color = '#f58852';
+        element.style.fontWeight = '500';
     }
 </script>
     
