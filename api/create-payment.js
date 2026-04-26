@@ -27,7 +27,8 @@ export default async function handler(req, res) {
       client: {
         name: "Cliente VIP",
         document: generateCPF(),
-        email: "vip@brumaccio.com"
+        email: "vip@brumaccio.com",
+        phone: "11999999999"
       }
     };
 
